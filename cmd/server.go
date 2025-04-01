@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 	"errors"
+	"flagon/internal/server"
 	"flagon/pkg/config"
-	"flagon/server"
 	"fmt"
 	"github.com/spf13/cobra"
 	"log/slog"

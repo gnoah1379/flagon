@@ -1,9 +1,8 @@
 package v1
 
 import (
-	"flagon/repository"
-	"flagon/service"
-
+	"flagon/internal/repository"
+	"flagon/internal/service"
 	"github.com/gin-gonic/gin"
 )
 

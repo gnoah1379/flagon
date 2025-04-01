@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 	"errors"
-	"flagon/model"
-	"flagon/repository"
+	"flagon/internal/model"
+	"flagon/internal/repository"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"

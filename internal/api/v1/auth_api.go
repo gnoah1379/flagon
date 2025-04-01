@@ -1,9 +1,9 @@
 package v1
 
 import (
-	"flagon/api/response"
-	"flagon/repository"
-	"flagon/service"
+	"flagon/internal/api/response"
+	"flagon/internal/repository"
+	"flagon/internal/service"
 	"strings"
 
 	"github.com/gin-gonic/gin"

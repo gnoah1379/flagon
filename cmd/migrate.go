@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"flagon/migrations"
+	"flagon/internal/migrations"
 	"flagon/pkg/config"
 	"flagon/pkg/database"
 	"fmt"

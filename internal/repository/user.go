@@ -1,8 +1,7 @@
 package repository
 
 import (
-	"flagon/model"
-
+	"flagon/internal/model"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )

@@ -1,0 +1,163 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Golang best practices and patterns for modern web applications
+globs: **/*.go
+---
+
+# Golang Best Practices
+
+## Project Structure
+- Follow standard Go project layout
+- Use modular package organization
+- Separate business logic from infrastructure
+- Group related functionality together
+- Implement clean interfaces between packages
+- Use internal packages for non-public code
+
+## Code Organization
+- Keep functions small and focused
+- Follow Go's naming conventions
+- Use meaningful package names
+- Organize by domain rather than by technical function
+- Group related types and functions together
+- Use interfaces for abstraction and testability
+
+## Error Handling
+- Always check returned errors
+- Return errors rather than using panic
+- Wrap errors with context using `fmt.Errorf` or `errors.Wrap`
+- Use custom error types for domain-specific errors
+- Include relevant information in error messages
+- Implement consistent error handling patterns
+
+## Concurrency
+- Use goroutines judiciously
+- Implement proper synchronization with mutexes
+- Use channels for communication between goroutines
+- Understand and avoid race conditions
+- Use context for cancellation and timeouts
+- Implement proper resource cleanup
+
+## Performance
+- Use benchmarks for performance testing
+- Profile to identify bottlenecks
+- Minimize allocations in hot paths
+- Use sync.Pool for frequently allocated objects
+- Consider mechanical sympathy for data structures
+- Optimize for real-world use cases, not theoretical ones
+
+## HTTP Handlers
+- Keep handlers focused on HTTP concerns
+- Delegate business logic to service layer
+- Implement proper middleware for cross-cutting concerns
+- Use context for request-scoped values
+- Implement proper error handling and status codes
+- Validate and sanitize inputs
+
+## Middleware
+- Use middleware for cross-cutting concerns
+- Implement composable middleware
+- Keep middleware focused on a single responsibility
+- Use middleware for logging, authentication, and error handling
+- Chain middleware properly
+- Maintain context through middleware chain
+
+## Database Access
+- Use prepared statements
+- Implement connection pooling
+- Keep transactions focused and short-lived
+- Use proper indexes in database schemas
+- Handle database errors gracefully
+- Use database/sql or a lightweight wrapper
+
+## Testing
+- Write unit tests for business logic
+- Implement integration tests for external dependencies
+- Use table-driven tests
+- Mock external dependencies
+- Test error cases
+- Use Go's built-in testing package
+
+## API Design
+- Design RESTful APIs with clear resource naming
+- Use proper HTTP methods (GET, POST, PUT, DELETE)
+- Implement consistent response formats
+- Use proper status codes for different scenarios
+- Version your APIs
+- Document APIs with OpenAPI/Swagger
+
+## Dependency Injection
+- Use constructor injection
+- Avoid global state
+- Use interfaces for dependencies
+- Keep dependencies explicit
+- Use functional options pattern for optional dependencies
+- Test with mock implementations
+
+## Configuration
+- Use environment variables for configuration
+- Keep configuration centralized
+- Implement validation for configuration values
+- Use sensible defaults
+- Support different environments (dev, staging, prod)
+- Separate configuration from code
+
+## Logging
+- Use structured logging
+- Include contextual information in logs
+- Implement proper log levels
+- Avoid logging sensitive information
+- Use a consistent logging format
+- Configure logging based on environment
+
+## Authentication & Authorization
+- Implement proper password hashing
+- Use JWTs or session-based authentication
+- Implement proper middleware for authentication
+- Use HTTPS for all communications
+- Apply principle of least privilege
+- Keep authentication logic centralized
+
+## Security
+- Validate and sanitize all user inputs
+- Protect against SQL injection
+- Implement proper CSRF protection
+- Use security headers
+- Regulate rate limiting
+- Follow OWASP best practices
+
+## Dependency Management
+- Use Go modules for dependency management
+- Pin dependency versions
+- Regularly update dependencies
+- Audit dependencies for security issues
+- Minimize external dependencies
+- Vendor dependencies for reproducible builds
+
+## Containerization
+- Use multi-stage builds for smaller images
+- Keep containers focused and minimal
+- Implement proper health checks
+- Use non-root users in containers
+- Handle signals properly for graceful shutdown
+- Follow the 12-factor app principles
+
+## Documentation
+- Document exported functions and types
+- Provide examples in documentation
+- Keep documentation up-to-date
+- Use godoc format
+- Document non-obvious behavior
+- Include usage examples
+
+## Code Style
+- Follow Go's official style guide
+- Use gofmt/goimports consistently
+- Keep line length reasonable
+- Implement consistent error handling patterns
+- Use meaningful variable names
+- Keep complexity low
