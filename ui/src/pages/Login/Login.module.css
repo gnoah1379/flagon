@@ -1,0 +1,70 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 32px;
+  background-color: #f5f5f5;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.rememberForgot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.forgotLink {
+  color: #1677ff;
+  text-decoration: none;
+}
+
+.forgotLink:hover {
+  text-decoration: underline;
+}
+
+.googleButton {
+  margin-bottom: 24px;
+  border: 1px solid #d9d9d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.googleButton:hover {
+  background-color: #fafafa;
+  border-color: #d9d9d9;
+}
+
+.signupContainer {
+  text-align: center;
+}
+
+.signupLink {
+  margin-left: 8px;
+  color: #1677ff;
+  text-decoration: none;
+}
+
+.signupLink:hover {
+  text-decoration: underline;
+} 

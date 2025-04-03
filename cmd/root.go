@@ -1,30 +1,27 @@
 package cmd
 
 import (
-	"context"
+	"flagon/cmd/migrate"
+	"flagon/cmd/server"
 	"flagon/pkg/config"
 	"flagon/pkg/log"
+
 	"github.com/spf13/cobra"
 )
 
 func Execute() error {
-	return rootCmd.Execute()
+	return cmd.Execute()
 }
 
-var rootCmd = &cobra.Command{
+var cfgFile string
+var cmd = &cobra.Command{
 	Use:   "flagon",
 	Short: "Flagon is web application for managing feature flags for your projects.",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		configFile, err := cmd.Flags().GetString("config")
-		if err != nil {
+		if err := config.LoadConfig(cfgFile); err != nil {
 			return err
 		}
-		cfg, err := config.LoadConfig(configFile)
-		if err != nil {
-			return err
-		}
-		cmd.SetContext(context.WithValue(cmd.Context(), "config", cfg))
-		if err := log.Setup(cfg.Log); err != nil {
+		if err := log.Init(); err != nil {
 			return err
 		}
 		return nil
@@ -32,9 +29,9 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringP("config", "c", "", "config file")
+	cmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file")
 
-	rootCmd.AddCommand(serverCmd)
-	rootCmd.AddCommand(migrateCmd)
+	cmd.AddCommand(server.Cmd)
+	cmd.AddCommand(migrate.Cmd)
 
 }

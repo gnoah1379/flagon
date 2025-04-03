@@ -6,35 +6,41 @@ import (
 	"errors"
 	"flagon/pkg/config"
 	"fmt"
-	"github.com/spf13/viper"
+	"time"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"time"
 )
 
 type DB struct {
 	*gorm.DB
+	driverName string
 }
 
-func Open(cfg config.Database) (*DB, error) {
+func (db *DB) DriverName() string {
+	return db.driverName
+}
+
+func Open() (*DB, error) {
+	dbCfg := config.GetConfig().Database
 	var gormCfg = &gorm.Config{
 		Logger: &slogLogger{},
 	}
 	var db *gorm.DB
 	var err error
-	switch cfg.Driver {
+	switch dbCfg.Driver {
 	case "sqlite":
-		dns := fmt.Sprintf("file:%s?_fk=true", viper.GetString("db.hostname"))
+		dns := fmt.Sprintf("file:%s?_fk=true", dbCfg.Database)
 		db, err = gorm.Open(sqlite.Open(dns), gormCfg)
 	case "postgres":
 		dns := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
-			cfg.Host, cfg.Port, cfg.Username, cfg.Password, cfg.Database, cfg.SSLMode)
+			dbCfg.Host, dbCfg.Port, dbCfg.Username, dbCfg.Password, dbCfg.Database, dbCfg.SSLMode)
 		db, err = gorm.Open(postgres.Open(dns), gormCfg)
 	case "mysql":
 		dns := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-			cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Database)
+			dbCfg.Username, dbCfg.Password, dbCfg.Host, dbCfg.Port, dbCfg.Database)
 		db, err = gorm.Open(mysql.Open(dns), gormCfg)
 	default:
 		return nil, errors.New("unsupported database driver")
@@ -46,17 +52,17 @@ func Open(cfg config.Database) (*DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	if cfg.MaxConns > 0 {
-		sqlDB.SetMaxOpenConns(cfg.MaxConns)
+	if dbCfg.MaxConns > 0 {
+		sqlDB.SetMaxOpenConns(dbCfg.MaxConns)
 	}
-	if cfg.MaxIdleConns > 0 {
-		sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)
+	if dbCfg.MaxIdleConns > 0 {
+		sqlDB.SetMaxIdleConns(dbCfg.MaxIdleConns)
 	}
-	if cfg.MaxConnLifetime > 0 {
-		sqlDB.SetConnMaxLifetime(cfg.MaxConnLifetime)
+	if dbCfg.MaxConnLifetime > 0 {
+		sqlDB.SetConnMaxLifetime(dbCfg.MaxConnLifetime)
 	}
-	if cfg.MaxConnIdleTime > 0 {
-		sqlDB.SetConnMaxIdleTime(cfg.MaxConnIdleTime)
+	if dbCfg.MaxConnIdleTime > 0 {
+		sqlDB.SetConnMaxIdleTime(dbCfg.MaxConnIdleTime)
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -64,7 +70,10 @@ func Open(cfg config.Database) (*DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &DB{DB: db}, nil
+	return &DB{
+		DB:         db,
+		driverName: dbCfg.Driver,
+	}, nil
 }
 
 func (db *DB) SqlDB() (*sql.DB, error) {

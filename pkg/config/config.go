@@ -6,13 +6,25 @@ import (
 	"time"
 )
 
+var config Config
+
 type Config struct {
 	Log      Log
 	Server   Server
 	Database Database
+	Auth     Authentication
+	Cache    Cache
 }
 
-func LoadConfig(filePath string) (Config, error) {
+func (conf Config) Validate() error {
+	return nil
+}
+
+func GetConfig() Config {
+	return config
+}
+
+func LoadConfig(filePath string) error {
 	viper.SetEnvPrefix("FLAGON")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AllowEmptyEnv(true)
@@ -20,17 +32,19 @@ func LoadConfig(filePath string) (Config, error) {
 	if filePath != "" {
 		viper.SetConfigFile(filePath)
 		if err := viper.ReadInConfig(); err != nil {
-			return Config{}, err
+			return err
 		}
 	}
 	for _, key := range viper.AllKeys() {
 		viper.SetDefault(key, viper.Get(key))
 	}
-	var config Config
 	if err := viper.Unmarshal(&config); err != nil {
-		return Config{}, err
+		return err
 	}
-	return config, nil
+	if err := config.Validate(); err != nil {
+		return err
+	}
+	return nil
 }
 
 func init() {
@@ -45,17 +59,25 @@ func init() {
 	viper.SetDefault("http.certFile", "")
 	viper.SetDefault("http.keyFile", "")
 
-	viper.SetDefault("db.driver", "sqlite")
-	viper.SetDefault("db.host", "")
-	viper.SetDefault("db.port", "")
-	viper.SetDefault("db.username", "")
-	viper.SetDefault("db.password", "")
-	viper.SetDefault("db.database", "flagon.sqlite")
-	viper.SetDefault("db.sslmode", "")
-	viper.SetDefault("db.maxConnLifetime", 0)
-	viper.SetDefault("db.maxConnIdleTime", 0)
-	viper.SetDefault("db.maxOpenConns", 0)
-	viper.SetDefault("db.maxIdleConns", 0)
+	viper.SetDefault("database.driver", "sqlite")
+	viper.SetDefault("database.host", "")
+	viper.SetDefault("database.port", "")
+	viper.SetDefault("database.username", "")
+	viper.SetDefault("database.password", "")
+	viper.SetDefault("database.database", "flagon.sqlite")
+	viper.SetDefault("database.sslmode", "")
+	viper.SetDefault("database.maxConnLifetime", 0)
+	viper.SetDefault("database.maxConnIdleTime", 0)
+	viper.SetDefault("database.maxOpenConns", 0)
+	viper.SetDefault("database.maxIdleConns", 0)
+
+	viper.SetDefault("auth.secret", "top-secret")
+	viper.SetDefault("auth.accessTokenLifetime", 0)
+	viper.SetDefault("auth.refreshTokenLifetime", 0)
+
+	viper.SetDefault("cache.addr", "localhost:6379")
+	viper.SetDefault("cache.db", 0)
+	viper.SetDefault("cache.password", "")
 }
 
 type Log struct {
@@ -84,4 +106,16 @@ type Database struct {
 	MaxIdleConns    int
 	MaxConnLifetime time.Duration
 	MaxConnIdleTime time.Duration
+}
+
+type Authentication struct {
+	Secret               string
+	AccessTokenLifetime  time.Duration
+	RefreshTokenLifetime time.Duration
+}
+
+type Cache struct {
+	Addr     string
+	DB       int
+	Password string
 }

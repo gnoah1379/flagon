@@ -9,10 +9,14 @@ import (
 	"strings"
 )
 
-func Setup(cfg config.Log) error {
-	var level slog.Level
-	err := level.UnmarshalText([]byte(cfg.Level))
+func Init() error {
+	var cfg config.Log
+	err := viper.Sub("log").Unmarshal(&cfg)
 	if err != nil {
+		return fmt.Errorf("failed to parse log config: %w", err)
+	}
+	var level slog.Level
+	if err = level.UnmarshalText([]byte(cfg.Level)); err != nil {
 		return fmt.Errorf("failed to parse log level: %w", err)
 	}
 	var logFile *os.File
